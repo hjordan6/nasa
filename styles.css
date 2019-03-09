@@ -1,8 +1,12 @@
 body {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
-    padding: 20px 100px 0px 100px;
+    padding: 2% 10% 0% 10%;
     background: #f3f3f3;
+}
+
+h1 {
+    margin-top: 0%;
 }
 
 button {
@@ -15,3 +19,27 @@ textarea {
     max-width: 500px;
     height: 100px;
 }
+
+form {
+    padding-bottom: 10px;
+}
+
+#page-wrap {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#center-logo {
+    margin: 0 auto;
+    width: 100px;
+}
+
+#img-center {
+    max-width: 100%;
+    height: auto;
+}
+
+.center {
+    text-align: center;
+}
+

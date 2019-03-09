@@ -11,13 +11,14 @@ let app = new Vue({
             alt: '',
         },
         loading: true,
-        search: 'moon',
+        search: 'NASA',
         addedName: '',
         addedComment: '',
         comments: {},
         ratings: {},
         image: '',
-        index: ''
+        index: '',
+        description: ''
     },
     created() {
       this.index = 0;
@@ -27,10 +28,11 @@ let app = new Vue({
         async start() {
             try {
                 this.loading = true;
-                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&keywords=SPACE');
+                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&keywords=NASA');
                 console.log(response.data);
                 this.current = response.data;
                 this.image = this.current.collection.items[this.index].links[0].href;
+                this.description = this.current.collection.items[this.index].data[0].description;
                 this.number = this.current.num;
                 this.loading = false;
               } catch (error) {
@@ -50,6 +52,8 @@ let app = new Vue({
                 console.log(response.data);
                 this.current = response.data;
                 this.image = this.current.collection.items[this.index].links[0].href;
+                this.description = this.current.collection.items[this.index].data[0].description;
+                this.index = 0;
                 this.number = this.current.num;
               }
               this.loading = false;
@@ -59,6 +63,10 @@ let app = new Vue({
             }
         },
         async next() {
+            if ((this.index + 1) == this.current.collection.items.length) {
+                this.image = "image-not-found.PNG";
+                return;
+            }
             this.index++;
             try {
                 this.loading = true;
@@ -67,6 +75,30 @@ let app = new Vue({
                 console.log(response.data);
                 this.current = response.data;
                 this.image = this.current.collection.items[this.index].links[0].href;
+                this.description = this.current.collection.items[this.index].data[0].description;
+                this.number = this.current.num;
+                this.loading = false;
+              } catch (error) {
+                this.number = this.max;
+                console.log(error);
+              }
+        },
+        async searchNum() {
+            var obj = document.getElementById("numSearch");
+            let hold = obj.value;
+            if (hold > this.current.collection.items.length) {
+                this.image = "image-not-found.PNG";
+                return;
+            }
+            this.index = (hold - 1);
+            try {
+                this.loading = true;
+                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&q=' + this.search +'&keywords=' + this.search);
+                console.log(this.index);
+                console.log(response.data);
+                this.current = response.data;
+                this.image = this.current.collection.items[this.index].links[0].href;
+                this.description = this.current.collection.items[this.index].data[0].description;
                 this.number = this.current.num;
                 this.loading = false;
               } catch (error) {
