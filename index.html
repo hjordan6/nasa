@@ -17,6 +17,7 @@
       </div>
       <div v-else>
         <div>
+          <p><strong>Select a topic of images to view from the drop-down menu</strong></p>
           <form id=center>
             <select id="input">
               <option>Make a selection</option> 
@@ -40,12 +41,13 @@
             <input type="button" v-on:click="getPhoto()" value="Search Images">
             <input type="button" v-on:click="next()" value="Next Image">
           </form>
+          <p><strong>Enter a value between 1 and {{current.collection.items.length}} to search the images for {{search}} (Optional)</strong></p>
           <form>
             <input id="numSearch" type="text" placeholder="Enter Image Number">
             <input type="button" v-on:click="searchNum()" value="find">
           </form>
         </div>
-        <p id=center><strong>Viewing images for {{search}}, {{index + 1}}/{{current.collection.items.length}}</strong></p>
+        <p id=center><strong>Viewing image {{index + 1}} in {{search}} collection</strong></p>
         <div id=center><img v-bind:src="image" v-bind:alt="current.alt"></div>
         <p id=center><i>Description: {{description}}</i></p>
         <h3>Add a Comment</h3>
@@ -69,7 +71,7 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
   <script src="/script.js"></script>
-  <a href="https://github.com/BYU-CS-260-Winter-2019/lab-3-hjordan6">github</a href>
+  <a href="https://github.com/hjordan6/nasa">github</a href>
 </body>
 
 </html>

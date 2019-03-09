@@ -86,7 +86,7 @@ let app = new Vue({
         async searchNum() {
             var obj = document.getElementById("numSearch");
             let hold = obj.value;
-            if (hold > this.current.collection.items.length) {
+            if (hold > this.current.collection.items.length || hold < 1) {
                 this.image = "image-not-found.PNG";
                 return;
             }
