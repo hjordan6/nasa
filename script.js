@@ -46,6 +46,7 @@ let app = new Vue({
               var obj = document.getElementById("input")
               let hold = obj.options[obj.selectedIndex].text;
               if (hold != "Make a selection") {
+                this.index = 0;
                 this.search = obj.options[obj.selectedIndex].text;
                 const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&q=' + this.search +'&keywords=' + this.search);
                 console.log(this.index);
@@ -53,7 +54,6 @@ let app = new Vue({
                 this.current = response.data;
                 this.image = this.current.collection.items[this.index].links[0].href;
                 this.description = this.current.collection.items[this.index].data[0].description;
-                this.index = 0;
                 this.number = this.current.num;
               }
               this.loading = false;
