@@ -18,38 +18,11 @@
       <div v-else>
         <div>
           <p><strong>Search images using the search bar below</strong></p>
-<!--
-          <form id=center>
-            <select id="input">
-              <option>Make a selection</option>
-              <option>Apollo</option>
-              <option>Astronauts</option>
-              <option>Black Hole</option>
-              <option>Earth</option>
-              <option>Jupiter</option>
-              <option>Mars</option>
-              <option>Moon</option>
-              <option>Milky Way</option>
-              <option>NASA</option>
-              <option>Neptune</option>
-              <option>Nebula</option>
-              <option>Saturn</option>
-              <option>Space</option>
-              <option>Stars</option>
-              <option>Sun</option>
-              <option>Space Shuttle</option>
-            </select>
-            <input type="button" v-on:click="getPhoto()" value="Search Images">
-            <input type="button" v-on:click="next()" value="Next Image">
-          </form>
--->
-<!---->
           <form id=center>
             <input id="input" type="text" placeholder="Search">
             <input type="button" v-on:click="getPhoto()" value="Search Images">
             <input type="button" v-on:click="next()" value="Next Image">
           </form>
-<!---->
           <div v-if="not_found"></div>
           <div v-else>
             <p><strong>Enter a number between 1 and {{current.collection.items.length}} to search the images for {{search}} (Optional)</strong></p>
@@ -73,19 +46,6 @@
         <p id=center><i>{{images[3].des}}</i></p>
         <div id=center><img v-bind:src="images[4].img" v-bind:alt="current.alt"></div>
         <p id=center><i>{{images[4].des}}</i></p>
-        <!--<h3>Add a Comment</h3>
-        <form v-on:submit.prevent="addComment">
-          <input v-model="addedName" placeholder="Name"></p>
-          <textarea v-model="addedComment" placeholder="Comment"></textarea>
-          <br />
-          <button type="submit">Comment</button>
-        </form>
-        <h3>Comments</h3>
-        <div v-for="comment in comments[number]">
-          <hr>
-          <p>{{comment.text}}</p>
-          <p><i>-- {{comment.author}} on {{comment.time}}</i></p>
-        </div>-->
       </div>
     </div>
   </div>

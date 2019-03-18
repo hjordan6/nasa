@@ -1,8 +1,8 @@
 let app = new Vue({
     el: '#app',
     data: {
-        number: '',
-        max: '',
+        //number: '',
+        //max: '',
         current: {
             title: '',
             img: '',
@@ -15,9 +15,7 @@ let app = new Vue({
             img: '',
             des: '',
         },
-        image: '',
         index: '',
-        //description: ''
     },
     created() {
       this.index = 0;
@@ -79,6 +77,7 @@ let app = new Vue({
             }
         },
         async next() {
+            this.not_found = false;
             let end = false;
             if ((this.index + 5) >= this.current.collection.items.length) {
                 return;
@@ -88,53 +87,6 @@ let app = new Vue({
                 end = true;
             }
             try {
-                this.loading = true;
-                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&q=' + this.search +'&keywords=' + this.search);
-                console.log(this.index);
-                console.log(response.data);
-                this.current = response.data;
-                if (!end) {
-                    for (let i = 0; i < 5; i++) {
-                        Vue.set(this.images, i, new Object);
-                        this.images[i].img = this.current.collection.items[this.index + i].links[0].href;
-                        this.images[i].des = this.current.collection.items[this.index + i].data[0].description;
-                    }
-                } else {
-                    for (let i = this.index; i < this.current.collection.items.length; i++) {
-                        Vue.set(this.images, i, new Object);
-                        this.images[i - this.index].img = this.current.collection.items[this.index + (i - this.index)].links[0].href;
-                        this.images[i - this.index].des = this.current.collection.items[this.index + (i - this.index)].data[0].description;
-                    }
-                }
-                
-                this.number = this.current.num;
-                this.loading = false;
-              } catch (error) {
-                this.number = this.max;
-                console.log(error);
-              }
-        },
-        async searchNum() {
-            var obj = document.getElementById("numSearch");
-            console.log(obj);
-            let hold = Number(obj.value);
-            let len = this.current.collection.items.length;
-            let max = (hold + 5);
-            if (hold > len || hold < 1) {
-                this.image = "image-not-found.PNG";
-                return;
-            }
-            let end = false;
-            if (max > len) {
-                end = true;
-            }
-            this.index = (hold - 1);
-            try {
-                this.loading = true;
-                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&q=' + this.search +'&keywords=' + this.search);
-                console.log(this.index);
-                console.log(response.data);
-                this.current = response.data;
                 if (!end) {
                     for (let i = 0; i < 5; i++) {
                         Vue.set(this.images, i, new Object);
@@ -153,38 +105,62 @@ let app = new Vue({
                         this.images[i - this.index].des = this.current.collection.items[this.index + (i - this.index)].data[0].description;
                     }
                 }
-                end = false;
-                this.number = this.current.num;
-                this.loading = false;
               } catch (error) {
                 this.number = this.max;
                 console.log(error);
               }
         },
-        
-        /*
-        addComment() {
-            if (!(this.number in this.comments))
-              Vue.set(app.comments, this.number, new Array);
-              var t = moment().format('MMMM Do YYYY, h:mm:ss a')
-            this.comments[this.number].push({
-              author: this.addedName,
-              text: this.addedComment,
-              time: t,
-            });
-            this.addedName = '';
-            this.addedComment = '';
+        async searchNum() {
+            this.not_found = false;
+            var obj = document.getElementById("numSearch");
+            console.log(obj);
+            let hold = Number(obj.value);
+            let len = this.current.collection.items.length;
+            let max = (hold + 5);
+            if (hold > len || hold < 1) {
+                this.image = "image-not-found.PNG";
+                return;
+            }
+            let end = false;
+            if (max > len) {
+                end = true;
+            }
+            this.index = (hold - 1);
+            try {
+                if (!end) {
+                    for (let i = 0; i < 5; i++) {
+                        Vue.set(this.images, i, new Object);
+                        this.images[i].img = this.current.collection.items[this.index + i].links[0].href;
+                        this.images[i].des = this.current.collection.items[this.index + i].data[0].description;
+                    }
+                } else {
+                    for (let i = 0; i < 5; i++) {
+                        Vue.set(this.images, i, new Object);
+                        this.images[i].img = '';
+                        this.images[i].des = '';
+                    }
+                    for (let i = this.index; i < this.current.collection.items.length; i++) {
+                        Vue.set(this.images, i, new Object);
+                        this.images[i - this.index].img = this.current.collection.items[this.index + (i - this.index)].links[0].href;
+                        this.images[i - this.index].des = this.current.collection.items[this.index + (i - this.index)].data[0].description;
+                    }
+                }
+              } catch (error) {
+                this.not_found = true;
+                for (let i = 0; i < 5; i++) {
+                    Vue.set(this.images, i, new Object);
+                    this.images[i].img = '';
+                    this.images[i].des = '';
+                }
+                this.images[0].img = "image-not-found.PNG";
+                this.images[0].des = "Your search yeilded no results";
+                this.loading = false;
+                this.number = this.max;
+                console.log(error);
+                this.number = this.max;
+                console.log(error);
+              }
         },
-        setRating(rating){
-            if (!(this.number in this.ratings))
-            Vue.set(this.ratings, this.number, {
-                sum: 0,
-                total: 0
-              });
-            this.ratings[this.number].sum += rating;
-            this.ratings[this.number].total += 1;
-        }
-        */
     },
     computed: {
         endIndex() {
@@ -193,176 +169,5 @@ let app = new Vue({
             }
             return this.index + 5;
         }
-        /*
-        month() {
-            var month = new Array;
-            if (this.current.month === undefined)
-                return '';
-            month[0] = "January";
-            month[1] = "February";
-            month[2] = "March";
-            month[3] = "April";
-            month[4] = "May";
-            month[5] = "June";
-            month[6] = "July";
-            month[7] = "August";
-            month[8] = "September";
-            month[9] = "October";
-            month[10] = "November";
-            month[11] = "December";
-            return month[this.current.month - 1];
-        },
-        aveRating() {
-            if (this.ratings[this.number] === undefined)
-                return '';
-            return (this.ratings[this.number].sum / this.ratings[this.number].total).toFixed(1);
-        },
-        date() {
-            if (this.comments[this.number] === undefined)
-                return '';
-            return this.comments[this.number].date;
-        }
-        */
     },
 });
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-/*Vue.component('star-rating', VueStarRating.default);
-
-let app = new Vue({
-    el: '#app',
-    data: {
-        current: {
-            title: '',
-            img: '',
-            alt: '',
-        },
-        loading: true,
-        search: 'NASA',
-        addedName: '',
-        addedComment: '',
-        comments: {},
-        ratings: {},
-        image: '',
-        index: '',
-        description: '',
-        images: {
-            img: '',
-            comments: {},
-            description: '',
-            likes: 0,
-        }
-    },
-    created() {
-      this.index = 0;
-      this.start();
-    },
-    methods: {
-        async start() {
-            try {
-                this.loading = true;
-                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&keywords=NASA');
-                //console.log(response.data);
-                //this.current = response.data;
-                var obj = response.data.collection.items;
-                //Vue.set(this.images, new Array);
-                for (let i = 0; i  < obj.length; i++) {
-                    Vue.set(this.images, i, new Object);
-                    this.images[i].img = obj[i].links[0].href;
-                    this.images[i].description = obj[i].data[0].description;
-                }
-                console.log(this.images);
-                //this.image = this.current.collection.items[this.index].links[0].href;
-                //this.description = this.current.collection.items[this.index].data[0].description;
-                //this.number = this.current.num;
-                this.loading = false;
-              } catch (error) {
-                this.number = this.max;
-                console.log(error);
-              }
-        },
-        async getPhoto() {
-            try {
-              this.loading = true;
-              var obj = document.getElementById("input")
-              let hold = obj.options[obj.selectedIndex].text;
-              if (hold != "Make a selection") {
-                this.index = 0;
-                this.search = obj.options[obj.selectedIndex].text;
-                const response = await axios.get('https://images-api.nasa.gov/search?media_type=image&q=' + this.search +'&keywords=' + this.search);
-                //console.log(this.index);
-                //console.log(response.data);
-                //this.current = response.data;
-                var obj = response.data.collection.items;
-                //Vue.set(this.images, new Array);
-                for (let i = 0; i  < obj.length; i++) {
-                    Vue.set(this.images, i, new Object);
-                    this.images[i].img = obj[i].links[0].href;
-                    this.images[i].description = obj[i].data[0].description;
-                }
-                console.log(this.images);
-                //this.image = this.current.collection.items[this.index].links[0].href;
-                //this.description = this.current.collection.items[this.index].data[0].description;
-                //this.number = this.current.num;
-              }
-              this.loading = false;
-            } catch (error) {
-              this.number = this.max;
-              console.log(error);
-            }
-        },
-        async next() {
-            if ((this.index + 1) == this.current.collection.items.length) {
-                this.image = "image-not-found.PNG";
-                return;
-            }
-            this.index++;
-            //this.image = this.current.collection.items[this.index].links[0].href;
-            //this.description = this.current.collection.items[this.index].data[0].description;
-        },
-        async searchNum() {
-            var obj = document.getElementById("numSearch");
-            let hold = obj.value;
-            if (hold > this.current.collection.items.length || hold < 1) {
-                this.image = "image-not-found.PNG";
-                return;
-            }
-            this.index = (hold - 1);
-            //this.image = this.current.collection.items[this.index].links[0].href;
-            //this.description = this.current.collection.items[this.index].data[0].description;
-        },
-        addComment() {
-            if (!(this.number in this.comments))
-              Vue.set(app.comments, this.number, new Array);
-              var t = moment().format('MMMM Do YYYY, h:mm:ss a')
-            this.comments[this.number].push({
-              author: this.addedName,
-              text: this.addedComment,
-              time: t,
-            });
-            this.addedName = '';
-            this.addedComment = '';
-        },
-    },
-    computed: {
-        date() {
-            if (this.comments[this.number] === undefined)
-                return '';
-            return this.comments[this.number].date;
-        }
-    },
-    
-    watch: {
-        number(value, oldvalue) {
-            if (oldvalue === '') {
-                this.max = value;
-            } else {
-                this.xkcd();
-            }
-        },
-    },
-  });
-  */
