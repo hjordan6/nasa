@@ -17,10 +17,11 @@
       </div>
       <div v-else>
         <div>
-          <p><strong>Select a topic of images to view from the drop-down menu</strong></p>
+          <p><strong>Search images using the search bar below</strong></p>
+<!--
           <form id=center>
             <select id="input">
-              <option>Make a selection</option> 
+              <option>Make a selection</option>
               <option>Apollo</option>
               <option>Astronauts</option>
               <option>Black Hole</option>
@@ -41,16 +42,38 @@
             <input type="button" v-on:click="getPhoto()" value="Search Images">
             <input type="button" v-on:click="next()" value="Next Image">
           </form>
-          <p><strong>Enter a value between 1 and {{current.collection.items.length}} to search the images for {{search}} (Optional)</strong></p>
-          <form>
-            <input id="numSearch" type="text" placeholder="Enter Image Number">
-            <input type="button" v-on:click="searchNum()" value="find">
+-->
+<!---->
+          <form id=center>
+            <input id="input" type="text" placeholder="Search">
+            <input type="button" v-on:click="getPhoto()" value="Search Images">
+            <input type="button" v-on:click="next()" value="Next Image">
           </form>
+<!---->
+          <div v-if="not_found"></div>
+          <div v-else>
+            <p><strong>Enter a number between 1 and {{current.collection.items.length}} to search the images for {{search}} (Optional)</strong></p>
+            <form>
+              <input id="numSearch" type="text" placeholder="Enter Image Number">
+              <input type="button" v-on:click="searchNum()" value="find">
+            </form>
+          </div>
         </div>
-        <p id=center><strong>Viewing image {{index + 1}} in {{search}} collection</strong></p>
-        <div id=center><img v-bind:src="image" v-bind:alt="current.alt"></div>
-        <p id=center><i>Description: {{description}}</i></p>
-        <h3>Add a Comment</h3>
+        <div v-if="not_found"></div>
+        <div v-else>
+          <p id=center><strong>Viewing images {{index + 1}} - {{endIndex}} in {{search}} collection</strong></p>
+        </div>
+        <div id=center><img v-bind:src="images[0].img" v-bind:alt="current.alt"></div>
+        <p id=center><i>{{images[0].des}}</i></p>
+        <div id=center><img v-bind:src="images[1].img" v-bind:alt="current.alt"></div>
+        <p id=center><i>{{images[1].des}}</i></p>
+        <div id=center><img v-bind:src="images[2].img" v-bind:alt="current.alt"></div>
+        <p id=center><i>{{images[2].des}}</i></p>
+        <div id=center><img v-bind:src="images[3].img" v-bind:alt="current.alt"></div>
+        <p id=center><i>{{images[3].des}}</i></p>
+        <div id=center><img v-bind:src="images[4].img" v-bind:alt="current.alt"></div>
+        <p id=center><i>{{images[4].des}}</i></p>
+        <!--<h3>Add a Comment</h3>
         <form v-on:submit.prevent="addComment">
           <input v-model="addedName" placeholder="Name"></p>
           <textarea v-model="addedComment" placeholder="Comment"></textarea>
@@ -62,7 +85,7 @@
           <hr>
           <p>{{comment.text}}</p>
           <p><i>-- {{comment.author}} on {{comment.time}}</i></p>
-        </div>
+        </div>-->
       </div>
     </div>
   </div>
